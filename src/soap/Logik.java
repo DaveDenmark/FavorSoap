@@ -15,6 +15,7 @@ import javax.ws.rs.core.Cookie;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import java.net.URL;
+import javax.ws.rs.core.NewCookie;
 import sun.net.www.http.HttpClient;
 
 
@@ -24,19 +25,21 @@ public class Logik implements LogikI {
     private String brugerNavn;
     private String adgangsKode;
 
-    public Cookie login(String bruger, String adgangskode) throws Exception {
-        System.out.println("Du skal logge ind før du kan benytte SOAP API'et");
-
-        URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
-        QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
-        Service service = Service.create(url, qname);
-        ba = service.getPort(Brugeradmin.class);
-
-        Bruger b = ba.hentBruger(bruger, adgangskode);
-        brugerNavn = bruger;
-        adgangsKode = adgangskode;
-        return new Cookie(bruger,adgangskode);
+    public Cookie login(String bruger, String adgangskode) {
+        try {
+            URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
+            QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
+            Service service = Service.create(url, qname);
+            ba = service.getPort(Brugeradmin.class);
+            ba.hentBruger(bruger, adgangskode);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+       return new NewCookie(bruger, adgangskode);
     }
+    
   public String makeServiceCall(String reqUrl) {
             String response = null;
             try {
@@ -57,18 +60,27 @@ public class Logik implements LogikI {
             }
             return response;
         }
-
+  
     public String getOrders(Cookie cookie) {
-       String get = makeServiceCall("https://favordrop.firebaseio.com/orders.json");
-        return get;
+        String response = "Not authenticated!";
+        try {
+            if (cookie != null) {
+               ba.hentBruger(cookie.getName(), cookie.getValue());
+               response = makeServiceCall("https://favordrop.firebaseio.com/orders.json");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }   
 
-    public boolean getClients(Cookie cookie) {
-        return false;
+    public String getClients(Cookie cookie) {
+        return "";
     }
     
-    public boolean getPartners(Cookie cookie) {
-        return false;
+    public String getPartners(Cookie cookie) {
+        return "";
     }
 
     private String convertStreamToString(InputStream in) {

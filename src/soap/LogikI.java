@@ -11,7 +11,7 @@ import javax.ws.rs.core.Cookie;
 @WebService 
 public interface LogikI {
     @WebMethod Cookie login(String bruger, String adgangskode) throws Exception;
-    @WebMethod boolean getClients(Cookie cookie);
+    @WebMethod String getClients(Cookie cookie);
     @WebMethod String getOrders(Cookie cookie);
-    @WebMethod boolean getPartners(Cookie cookie);
+    @WebMethod String getPartners(Cookie cookie);
 }

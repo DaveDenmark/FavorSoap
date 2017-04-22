@@ -1,1 +1,5 @@
 /dist/
+nbproject/private/private.properties
+build/classes/.netbeans_automatic_build
+*.netbeans_update_resources
+build/classes/brugerauth/Brugeradmin.class
