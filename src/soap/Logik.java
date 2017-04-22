@@ -28,46 +28,15 @@ public class Logik implements LogikI {
         return new Cookie(bruger,adgangskode);
     }
 
-    public boolean addClient(Cookie cookie) throws Exception{
-        Bruger b = ba.hentBruger(cookie.getName(), cookie.getValue());
-
-        // Tilføj bruger til firebase database
-        //
-
+    public boolean getOrders(Cookie cookie) {
         return false;
     }
 
-    public boolean addOrder(Cookie cookie) {
+    public boolean getClients(Cookie cookie) {
         return false;
     }
-
-    public boolean getUserOrders(Cookie cookie) {
+    
+    public boolean getPartners(Cookie cookie) {
         return false;
     }
-
-    public boolean getClient(Cookie cookie) {
-        return false;
-    }
-
-    public boolean updateClient(Cookie cookie) {
-        return false;
-    }
-
-    public boolean updateOrder(Cookie cookie) {
-        return false;
-    }
-
-    public boolean updateOrderToAccepted(Cookie cookie) {
-        return false;
-    }
-
-    public boolean updateOrderToFailed(Cookie cookie) {
-        return false;
-    }
-
-    public boolean updateOrderToSuccessfull(Cookie cookie) {
-        return false;
-    }
-
-
 }
