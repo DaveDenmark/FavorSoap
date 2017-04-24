@@ -41,28 +41,28 @@ public class Logik implements LogikI {
     }
     
   public String makeServiceCall(String reqUrl) {
-            String response = null;
-            try {
-                URL url = new URL(reqUrl);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                // read the response
-                InputStream in = new BufferedInputStream(conn.getInputStream());
-                response = convertStreamToString(in);
-            } catch (MalformedURLException e) {
-                
-            } catch (ProtocolException e) {
-                
-            } catch (IOException e) {
-                
-            } catch (Exception e) {
-                
-            }
-            return response;
+        String response = null;
+        try {
+            URL url = new URL(reqUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            // read the response
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+            response = convertStreamToString(in);
+        } catch (MalformedURLException e) {
+
+        } catch (ProtocolException e) {
+
+        } catch (IOException e) {
+
+        } catch (Exception e) {
+
         }
+        return response;
+    }
   
     public String getOrders(Cookie cookie) {
-        String response = "Not authenticated!";
+        String response = null;
         try {
             if (cookie != null) {
                ba.hentBruger(cookie.getName(), cookie.getValue());
@@ -76,31 +76,53 @@ public class Logik implements LogikI {
     }   
 
     public String getClients(Cookie cookie) {
-        return "";
+        String response = null;
+        try {
+            if (cookie != null) {
+               ba.hentBruger(cookie.getName(), cookie.getValue());
+               response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }
     
     public String getPartners(Cookie cookie) {
-        return "";
+        String response = null;
+        try {
+            if (cookie != null) {
+               ba.hentBruger(cookie.getName(), cookie.getValue());
+               response = makeServiceCall("https://favordrop.firebaseio.com/partners.json");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
     private String convertStreamToString(InputStream in) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            StringBuilder sb = new StringBuilder();
-
-            String line;
-            try {
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append('\n');
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        StringBuilder sb = new StringBuilder();
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append('\n');
             }
-            return sb.toString();
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        } 
+        finally {
+            try {
+                in.close();
+            } 
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
         }
 }
