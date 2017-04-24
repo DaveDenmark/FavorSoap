@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.NewCookie;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
@@ -31,31 +32,32 @@ public class FavorCmd {
         LogikI logik = service.getPort(LogikI.class);
         boolean loggedIn = false;
         Scanner scan = new Scanner(System.in);
-       // Cookie login;
+        Cookie cooki = null;
         String username = "", password = "";
         
-           while (!loggedIn){
+        while (!loggedIn){
             System.out.println("Indtast brugernavn");
             username = scan.next();
             System.out.println("Indtast password");
             password = scan.next();
-  
+            
             boolean login2 = logik.login2(username, password);
 //            login = logik.login(username,password);
 //            System.out.println("login er: " + login);
-            
-            if(!login2) {
-               System.out.println("Forkert brugernavn eller password. Prøv igen."); 
-            }
-            else {
-               loggedIn = true;
-           }
-//        if (login==null) {
-//            System.out.println("Forkert brugernavn eller password. Prøv igen.");
-//        }
-//        
-//    }
-//        logik.getClients(login);
+
+if(!login2) {
+    System.out.println("Forkert brugernavn eller password. Prøv igen.");
 }
+else {
+    loggedIn = true;
+  //  NewCookie coo = new NewCookie(username, password);
+    
+}
+
+        }
+//           String clients = logik.getClients2();
+//           System.out.println("klienter: " + clients);
+            String orders = logik.getOrders(username, password);
+            System.out.println("Ordre: " + orders);
 }
 }

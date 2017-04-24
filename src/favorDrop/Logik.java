@@ -23,6 +23,7 @@ public class Logik {
     private Brugeradmin ba;
     private String brugerNavn;
     private String adgangsKode;
+    private String auth;
     
 //    public Cookie login(String bruger, String adgangskode) throws Exception {
 //        try {
@@ -39,19 +40,36 @@ public class Logik {
 //       return new NewCookie(bruger, adgangskode);
 //    }
     
+//    public NewCookie createCookie(String bruger, String adgangskode) throws Exception {
+//       NewCookie c = new NewCookie(bruger, adgangskode);
+//        return c;   
+//    }
+    
     public boolean login2(String bruger, String adgangskode) throws Exception {
         try {
             URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
             QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
             Service service = Service.create(url, qname);
             ba = service.getPort(Brugeradmin.class);
-            ba = service.getPort(Brugeradmin.class);
-            ba.hentBruger(bruger, adgangskode);
+            ba.hentBruger(bruger, adgangskode);  
         }
         catch (Throwable e) {
             return false;
         }
+        ba.setEkstraFelt(bruger, adgangskode, "auth", true);
         return true;
+    }
+    
+    public boolean checkAuth(String brugerNavn, String adgangskode) {
+        try {
+             if((boolean)ba.getEkstraFelt(brugerNavn, adgangskode, "auth") == true) {
+                 return true;
+             }
+        }
+       catch (Exception e) {
+           e.printStackTrace();
+    }
+        return false;
     }
     
     public String makeServiceCall(String reqUrl) {
@@ -75,11 +93,11 @@ public class Logik {
         return response;
     }
     
-    public String getOrders(Cookie cookie) {
+    public String getOrders(String brugerNavn, String adgangskode) {
         String response = null;
         try {
-            if (cookie != null) {
-                ba.hentBruger(cookie.getName(), cookie.getValue());
+            if (checkAuth(brugerNavn, adgangskode)) {
+                
                 response = makeServiceCall("https://favordrop.firebaseio.com/orders.json");
             }
         }
@@ -89,13 +107,10 @@ public class Logik {
         return response;
     }
     
-    public String getClients(Cookie cookie) {
+    public String getClients2() {
         String response = null;
         try {
-            if (cookie != null) {
-                ba.hentBruger(cookie.getName(), cookie.getValue());
-                response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
-            }
+            response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -103,19 +118,33 @@ public class Logik {
         return response;
     }
     
-    public String getPartners(Cookie cookie) {
-        String response = null;
-        try {
-            if (cookie != null) {
-                ba.hentBruger(cookie.getName(), cookie.getValue());
-                response = makeServiceCall("https://favordrop.firebaseio.com/partners.json");
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return response;
-    }
+//    public String getClients(Cookie cookie) {
+//        String response = null;
+//        try {
+//            if (cookie != null) {
+//                ba.hentBruger(cookie.getName(), cookie.getValue());
+//                response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
+//            }
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return response;
+//    }
+    
+//    public String getPartners(String user) {
+//        String response = null;
+//        try {
+//            if (cookie != null) {
+//                ba.hentBruger(cookie.getName(), cookie.getValue());
+//                response = makeServiceCall("https://favordrop.firebaseio.com/partners.json");
+//            }
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return response;
+//    }
     
     private String convertStreamToString(InputStream in) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
