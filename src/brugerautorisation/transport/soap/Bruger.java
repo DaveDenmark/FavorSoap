@@ -1,5 +1,5 @@
 
-package brugerauth;
+package brugerautorisation.transport.soap;
 
 import java.io.*;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ public class Bruger implements Serializable
         public String fornavn = "test";
         public String efternavn = "testesen";
 	public String adgangskode;
-        public HashMap<String,Object> ekstraFelter = new HashMap<String,Object>();
+        public HashMap<String,Object> ekstraFelter = new HashMap<>();
 
 
 	public String toString()

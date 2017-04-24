@@ -1,4 +1,4 @@
-package brugerauth;
+package brugerautorisation.transport.soap;
 
 import javax.jws.WebService;
 

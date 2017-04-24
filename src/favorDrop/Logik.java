@@ -1,7 +1,6 @@
-package soap;
+package favorDrop;
 
-import brugerauth.Bruger;
-import brugerauth.Brugeradmin;
+import brugerautorisation.transport.soap.Brugeradmin;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,28 +18,43 @@ import javax.ws.rs.core.NewCookie;
 import sun.net.www.http.HttpClient;
 
 
-@WebService(endpointInterface = "soap.LogikI")
-public class Logik implements LogikI {
+@WebService(endpointInterface = "favorDrop.LogikI")
+public class Logik {
     private Brugeradmin ba;
     private String brugerNavn;
     private String adgangsKode;
-
-    public Cookie login(String bruger, String adgangskode) {
+    
+//    public Cookie login(String bruger, String adgangskode) throws Exception {
+//        try {
+//            URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
+//            QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
+//            Service service = Service.create(url, qname);
+//            ba = service.getPort(Brugeradmin.class);
+//            ba.hentBruger(bruger, adgangskode);
+//        }
+//        catch(Throwable e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//       return new NewCookie(bruger, adgangskode);
+//    }
+    
+    public boolean login2(String bruger, String adgangskode) throws Exception {
         try {
             URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
             QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
             Service service = Service.create(url, qname);
             ba = service.getPort(Brugeradmin.class);
+            ba = service.getPort(Brugeradmin.class);
             ba.hentBruger(bruger, adgangskode);
         }
-        catch(Exception e) {
-            e.printStackTrace();
-            return null;
+        catch (Throwable e) {
+            return false;
         }
-       return new NewCookie(bruger, adgangskode);
+        return true;
     }
     
-  public String makeServiceCall(String reqUrl) {
+    public String makeServiceCall(String reqUrl) {
         String response = null;
         try {
             URL url = new URL(reqUrl);
@@ -50,37 +64,37 @@ public class Logik implements LogikI {
             InputStream in = new BufferedInputStream(conn.getInputStream());
             response = convertStreamToString(in);
         } catch (MalformedURLException e) {
-
+            
         } catch (ProtocolException e) {
-
+            
         } catch (IOException e) {
-
+            
         } catch (Exception e) {
-
+            
         }
         return response;
     }
-  
+    
     public String getOrders(Cookie cookie) {
         String response = null;
         try {
             if (cookie != null) {
-               ba.hentBruger(cookie.getName(), cookie.getValue());
-               response = makeServiceCall("https://favordrop.firebaseio.com/orders.json");
+                ba.hentBruger(cookie.getName(), cookie.getValue());
+                response = makeServiceCall("https://favordrop.firebaseio.com/orders.json");
             }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
         return response;
-    }   
-
+    }
+    
     public String getClients(Cookie cookie) {
         String response = null;
         try {
             if (cookie != null) {
-               ba.hentBruger(cookie.getName(), cookie.getValue());
-               response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
+                ba.hentBruger(cookie.getName(), cookie.getValue());
+                response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
             }
         }
         catch (Exception e) {
@@ -93,8 +107,8 @@ public class Logik implements LogikI {
         String response = null;
         try {
             if (cookie != null) {
-               ba.hentBruger(cookie.getName(), cookie.getValue());
-               response = makeServiceCall("https://favordrop.firebaseio.com/partners.json");
+                ba.hentBruger(cookie.getName(), cookie.getValue());
+                response = makeServiceCall("https://favordrop.firebaseio.com/partners.json");
             }
         }
         catch (Exception e) {
@@ -102,7 +116,7 @@ public class Logik implements LogikI {
         }
         return response;
     }
-
+    
     private String convertStreamToString(InputStream in) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         StringBuilder sb = new StringBuilder();
@@ -111,18 +125,18 @@ public class Logik implements LogikI {
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append('\n');
             }
-        } 
+        }
         catch (IOException e) {
             e.printStackTrace();
-        } 
+        }
         finally {
             try {
                 in.close();
-            } 
+            }
             catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return sb.toString();
-        }
+    }
 }
