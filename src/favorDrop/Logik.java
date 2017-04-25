@@ -97,7 +97,6 @@ public class Logik {
         String response = null;
         try {
             if (checkAuth(brugerNavn, adgangskode)) {
-                
                 response = makeServiceCall("https://favordrop.firebaseio.com/orders.json");
             }
         }
@@ -107,10 +106,12 @@ public class Logik {
         return response;
     }
     
-    public String getClients2() {
+    public String getClients(String brugerNavn, String adgangskode) {
         String response = null;
         try {
-            response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
+             if (checkAuth(brugerNavn, adgangskode)) {
+                response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -118,33 +119,18 @@ public class Logik {
         return response;
     }
     
-//    public String getClients(Cookie cookie) {
-//        String response = null;
-//        try {
-//            if (cookie != null) {
-//                ba.hentBruger(cookie.getName(), cookie.getValue());
-//                response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
-//            }
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return response;
-//    }
-    
-//    public String getPartners(String user) {
-//        String response = null;
-//        try {
-//            if (cookie != null) {
-//                ba.hentBruger(cookie.getName(), cookie.getValue());
-//                response = makeServiceCall("https://favordrop.firebaseio.com/partners.json");
-//            }
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return response;
-//    }
+    public String getPartners(String brugerNavn, String adgangskode) {
+        String response = null;
+        try {
+             if (checkAuth(brugerNavn, adgangskode)) {
+                response = makeServiceCall("https://favordrop.firebaseio.com/partners.json");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
     
     private String convertStreamToString(InputStream in) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));

@@ -10,11 +10,8 @@ import javax.ws.rs.core.Cookie;
 
 @WebService
 public interface LogikI {
-   // @WebMethod Cookie login(String bruger, String adgangskode) throws Exception;
     @WebMethod boolean login2(String bruger, String adgangskode) throws Exception;
-    //@WebMethod String getClients(Cookie cookie);
-    @WebMethod String getClients2();
+    @WebMethod String getClients(String user, String adgangskode);
     @WebMethod String getOrders(String user, String adgangskode);
-//    @WebMethod String getPartners(Cookie user);
-//    @WebMethod Cookie createCookie(String bruger, String adgangskode)throws Exception;
+    @WebMethod String getPartners(String user, String adgangskode);
 }
