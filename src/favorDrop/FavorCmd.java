@@ -47,7 +47,9 @@ public class FavorCmd {
                 loggedIn = true;
             } 
         }
-        String orders = logik.getPartners(username, password);
+      //  String orders = logik.getClients(username, password);
+        int orders = logik.getClientsA(username, password);
         System.out.println("Ordre: " + orders);
+        
     }
 }

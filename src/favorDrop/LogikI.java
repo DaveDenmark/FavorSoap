@@ -14,4 +14,5 @@ public interface LogikI {
     @WebMethod String getClients(String user, String adgangskode);
     @WebMethod String getOrders(String user, String adgangskode);
     @WebMethod String getPartners(String user, String adgangskode);
+    @WebMethod int getClientsA(String user, String adgangskode);
 }
