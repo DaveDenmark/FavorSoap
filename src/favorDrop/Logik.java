@@ -18,7 +18,6 @@ import java.util.Iterator;
 import javax.ws.rs.core.NewCookie;
 import org.json.JSONArray;
 import org.json.JSONException;
-import sun.net.www.http.HttpClient;
 import org.json.JSONObject;
 
 
@@ -29,27 +28,7 @@ public class Logik {
     private String adgangsKode;
     private String auth;
     
-//    public Cookie login(String bruger, String adgangskode) throws Exception {
-//        try {
-//            URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
-//            QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
-//            Service service = Service.create(url, qname);
-//            ba = service.getPort(Brugeradmin.class);
-//            ba.hentBruger(bruger, adgangskode);
-//        }
-//        catch(Throwable e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//       return new NewCookie(bruger, adgangskode);
-//    }
-    
-//    public NewCookie createCookie(String bruger, String adgangskode) throws Exception {
-//       NewCookie c = new NewCookie(bruger, adgangskode);
-//        return c;
-//    }
-    
-    public boolean login2(String bruger, String adgangskode) throws Exception {
+    public boolean login(String bruger, String adgangskode) throws Exception {
         try {
             URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
             QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
@@ -125,23 +104,6 @@ public class Logik {
         return response;
     }
     
-        public int getClientsA(String brugerNavn, String adgangskode) {
-        String response = null;
-        int amount = 0;
-        try {
-            if (checkAuth(brugerNavn, adgangskode)) {
-                response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
-                amount = getClientsAmount(response);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return amount;
-    }
-    
-    
-    
     public String getPartners(String brugerNavn, String adgangskode) {
         String response = null;
         try {
@@ -177,42 +139,29 @@ public class Logik {
         }
         return sb.toString();
     }
-//    public String jsonParser(String JSONString) throws JSONException {
-//        String string = "";
-//        JSONObject root = new JSONObject(JSONString);
-//        JSONObject completeArray = root.getJSONObject("completed");
-//        JSONObject firstComplet = completeArray.getJSONObject(0);
-//        String status = firstComplet.getString("status");
-//
-//        return status;
-//}
     
-    public int getClientsAmount(String jsonStr) throws JSONException {
+    public int getClientsA(String brugerNavn, String adgangskode) {
+        String response = null;
         int count = 0;
-        if (jsonStr != null) {
-            try {
-                JSONObject jsonObj = new JSONObject(jsonStr);
-                
-                // Getting JSON Array node
-                // JSONObject orders = jsonObj.getJSONObject("new");
-                Iterator<?> keys = jsonObj.keys();
-                
-// looping through All Contacts
-    
-while ( keys.hasNext() ) {
-    String key = (String) keys.next();
-    if (jsonObj.get(key) instanceof JSONObject) {
-        count++;
-      //  JSONObject c = (JSONObject) jsonObj.get(key);
-    }
-    
-    
-    
-}
-            } catch (final JSONException e) {
-                e.printStackTrace();
+        if (checkAuth(brugerNavn, adgangskode)) {
+            response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
+            if (response != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(response);                 
+                    // Getting JSON Array node
+                    Iterator<?> keys = jsonObj.keys();
+                    
+                    while ( keys.hasNext() ) {
+                        String key = (String) keys.next();
+                        if (jsonObj.get(key) instanceof JSONObject) {
+                            count++;
+                        }
+                    }
+                } catch (final JSONException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+        }    
         return count;
-    }
+    }        
 }

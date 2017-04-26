@@ -38,9 +38,9 @@ public class FavorCmd {
             System.out.println("Indtast password");
             password = scan.next();
             
-            boolean login2 = logik.login2(username, password);
+            boolean login = logik.login(username, password);
             
-            if(!login2) {
+            if(!login) {
                 System.out.println("Forkert brugernavn eller password. Prøv igen.");
             }
             else {
