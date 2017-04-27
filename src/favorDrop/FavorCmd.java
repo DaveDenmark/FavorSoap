@@ -31,6 +31,8 @@ public class FavorCmd {
         boolean loggedIn = false;
         Scanner scan = new Scanner(System.in);
         String username = "", password = "";
+        String response;
+        int number = 0;
         
         while (!loggedIn){
             System.out.println("Indtast brugernavn");
@@ -45,11 +47,38 @@ public class FavorCmd {
             }
             else {
                 loggedIn = true;
-            } 
+            }
         }
-      //  String orders = logik.getClients(username, password);
-        int orders = logik.getClientsA(username, password);
-        System.out.println("Ordre: " + orders);
         
+        whileLoop: while(true) {
+            System.out.println("");
+            System.out.println("Press 1 for number of clients in DB");
+            System.out.println("Press 2 for client JSON");
+            System.out.println("Press 3 for orders JSON");
+            System.out.println("Press 4 to terminate");
+            if (scan.hasNextInt()){
+                number=scan.nextInt();
+                scan.nextLine();
+            } else {
+                System.out.println("Input skal være et tal");
+                scan.nextLine();
+                continue;}
+            switch(number) {
+                case 1:
+                    int orders = logik.getClientsA(username, password);
+                    System.out.println("Antal klienter i DB: " + orders);
+                    break;
+                case 2:
+                    response = logik.getClients(username, password);
+                    System.out.println("Klienter JSON: " + response);
+                    break;
+                case 3:
+                    response = logik.getOrders(username, password);
+                    System.out.println("Orders JSON: " + response);
+                    break;
+                case 4: break whileLoop;
+                default: System.out.println("Ugyldigt tal, prøv igen");
+            }
+        }
     }
 }

@@ -78,11 +78,9 @@ public class Logik {
     
     public String getOrders(String brugerNavn, String adgangskode) {
         String response = null;
-        String test = null;
         try {
             if (checkAuth(brugerNavn, adgangskode)) {
                 response = makeServiceCall("https://favordrop.firebaseio.com/orders.json");
-                //   test = jsonParser(response);
             }
         }
         catch (Exception e) {
