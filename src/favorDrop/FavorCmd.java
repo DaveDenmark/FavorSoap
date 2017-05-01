@@ -32,18 +32,18 @@ public class FavorCmd {
         Scanner scan = new Scanner(System.in);
         String username = "", password = "";
         String response;
-        int number = 0;
+        int number;
         
         while (!loggedIn){
             System.out.println("Indtast brugernavn");
             username = scan.next();
-            System.out.println("Indtast password");
+            System.out.println("\n"+"Indtast password");
             password = scan.next();
             
             boolean login = logik.login(username, password);
             
             if(!login) {
-                System.out.println("Forkert brugernavn eller password. Prøv igen.");
+                System.out.println("\n"+"Forkert brugernavn eller password. Prøv igen.");
             }
             else {
                 loggedIn = true;
@@ -51,8 +51,7 @@ public class FavorCmd {
         }
         
         whileLoop: while(true) {
-            System.out.println("");
-            System.out.println("Press 1 for number of clients in DB");
+            System.out.println("\n"+"Press 1 for number of clients in DB");
             System.out.println("Press 2 for client JSON");
             System.out.println("Press 3 for orders JSON");
             System.out.println("Press 4 for number of partners in DB");
@@ -62,32 +61,34 @@ public class FavorCmd {
                 number=scan.nextInt();
                 scan.nextLine();
             } else {
-                System.out.println("Input skal være et tal");
+                System.out.println("\n"+"Input skal være et tal");
                 scan.nextLine();
                 continue;}
             switch(number) {
                 case 1:
                     number = logik.getClientsA(username, password);
-                    System.out.println("Antal klienter i DB: " + number);
+                    System.out.println("\n"+"Antal klienter i DB: " + number);
                     break;
                 case 2:
                     response = logik.getClients(username, password);
-                    System.out.println("Klienter JSON: " + response);
+                    System.out.println("\n"+"Klienter JSON: " + response);
                     break;
                 case 3:
                     response = logik.getOrders(username, password);
-                    System.out.println("Orders JSON: " + response);
+                    System.out.println("\n"+"Orders JSON: " + response);
                     break;
                 case 4:
                     number = logik.getPartnersA(username, password);
-                    System.out.println("Antal partnere i DB: " + number);
+                    System.out.println("\n"+"Antal partnere i DB: " + number);
                     break;
                 case 5:
                     number = logik.getOrdersA(username, password);
-                    System.out.println("Antal ordere i DB: " + number);
+                    System.out.println("\n"+"Antal ordre i DB: " + number);
                     break;
-                case 6: break whileLoop;
-                default: System.out.println("Ugyldigt tal, prøv igen");
+                case 6: 
+                    scan.close();
+                    break whileLoop;
+                default: System.out.println("\n"+"Ugyldigt tal, prøv igen");
             }
         }
     }

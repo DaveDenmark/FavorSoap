@@ -10,13 +10,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import javax.jws.WebService;
-import javax.ws.rs.core.Cookie;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import java.net.URL;
 import java.util.Iterator;
-import javax.ws.rs.core.NewCookie;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,14 +61,10 @@ public class Logik {
             // read the response
             InputStream in = new BufferedInputStream(conn.getInputStream());
             response = convertStreamToString(in);
-        } catch (MalformedURLException e) {
-            
-        } catch (ProtocolException e) {
-            
-        } catch (IOException e) {
-            
+        } catch (MalformedURLException e) {           
+        } catch (ProtocolException e) {          
+        } catch (IOException e) {      
         } catch (Exception e) {
-            
         }
         return response;
     }
@@ -139,7 +132,7 @@ public class Logik {
     }
     
     public int getClientsA(String brugerNavn, String adgangskode) {
-        String response = null;
+        String response;
         int count = 0;
         if (checkAuth(brugerNavn, adgangskode)) {
             response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/clients/");
@@ -164,7 +157,7 @@ public class Logik {
     }
     
     public int getPartnersA(String brugerNavn, String adgangskode) {
-        String response = null;
+        String response;
         int count = 0;
         if (checkAuth(brugerNavn, adgangskode)) {
             response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/partners/");
@@ -189,7 +182,7 @@ public class Logik {
     }
     
     public int getOrdersA(String brugerNavn, String adgangskode) {
-        String response = null;
+        String response;
         int count = 0;
         if (checkAuth(brugerNavn, adgangskode)) {
             response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/orders/");
@@ -213,6 +206,4 @@ public class Logik {
         }
         return count;
     }
-    
-    
 }

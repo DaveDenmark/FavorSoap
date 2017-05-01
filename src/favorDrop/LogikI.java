@@ -2,7 +2,6 @@ package favorDrop;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
-import javax.ws.rs.core.Cookie;
 
 /**
  * Created by Rasmus on 12-04-2017.
