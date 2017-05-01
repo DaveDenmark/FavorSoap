@@ -80,7 +80,7 @@ public class Logik {
         String response = null;
         try {
             if (checkAuth(brugerNavn, adgangskode)) {
-                response = makeServiceCall("https://favordrop.firebaseio.com/orders.json");
+                response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/orders/");
             }
         }
         catch (Exception e) {
@@ -93,7 +93,7 @@ public class Logik {
         String response = null;
         try {
             if (checkAuth(brugerNavn, adgangskode)) {
-                response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
+                response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/clients/");
             }
         }
         catch (Exception e) {
@@ -106,7 +106,7 @@ public class Logik {
         String response = null;
         try {
             if (checkAuth(brugerNavn, adgangskode)) {
-                response = makeServiceCall("https://favordrop.firebaseio.com/partners.json");
+                response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/partners/");
             }
         }
         catch (Exception e) {
@@ -142,10 +142,10 @@ public class Logik {
         String response = null;
         int count = 0;
         if (checkAuth(brugerNavn, adgangskode)) {
-            response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
+            response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/clients/");
             if (response != null) {
                 try {
-                    JSONObject jsonObj = new JSONObject(response);                 
+                    JSONObject jsonObj = new JSONObject(response);
                     // Getting JSON Array node
                     Iterator<?> keys = jsonObj.keys();
                     
@@ -159,7 +159,60 @@ public class Logik {
                     e.printStackTrace();
                 }
             }
-        }    
+        }
         return count;
-    }        
+    }
+    
+    public int getPartnersA(String brugerNavn, String adgangskode) {
+        String response = null;
+        int count = 0;
+        if (checkAuth(brugerNavn, adgangskode)) {
+            response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/partners/");
+            if (response != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(response);
+                    // Getting JSON Array node
+                    Iterator<?> keys = jsonObj.keys();
+                    
+                    while ( keys.hasNext() ) {
+                        String key = (String) keys.next();
+                        if (jsonObj.get(key) instanceof JSONObject) {
+                            count++;
+                        }
+                    }
+                } catch (final JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return count;
+    }
+    
+    public int getOrdersA(String brugerNavn, String adgangskode) {
+        String response = null;
+        int count = 0;
+        if (checkAuth(brugerNavn, adgangskode)) {
+            response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/orders/");
+            if (response != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(response);
+                    JSONObject orders = jsonObj.getJSONObject("completed");
+                    // Getting JSON Array node
+                    Iterator<?> keys = orders.keys();
+                    
+                    while ( keys.hasNext() ) {
+                        String key = (String) keys.next();
+                        if (orders.get(key) instanceof JSONObject) {
+                            count++;
+                        }
+                    }
+                } catch (final JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return count;
+    }
+    
+    
 }

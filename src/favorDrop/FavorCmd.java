@@ -55,7 +55,9 @@ public class FavorCmd {
             System.out.println("Press 1 for number of clients in DB");
             System.out.println("Press 2 for client JSON");
             System.out.println("Press 3 for orders JSON");
-            System.out.println("Press 4 to terminate");
+            System.out.println("Press 4 for number of partners in DB");
+            System.out.println("Press 5 for number of completed orders in DB");
+            System.out.println("Press 6 to terminate");
             if (scan.hasNextInt()){
                 number=scan.nextInt();
                 scan.nextLine();
@@ -65,8 +67,8 @@ public class FavorCmd {
                 continue;}
             switch(number) {
                 case 1:
-                    int orders = logik.getClientsA(username, password);
-                    System.out.println("Antal klienter i DB: " + orders);
+                    number = logik.getClientsA(username, password);
+                    System.out.println("Antal klienter i DB: " + number);
                     break;
                 case 2:
                     response = logik.getClients(username, password);
@@ -76,7 +78,15 @@ public class FavorCmd {
                     response = logik.getOrders(username, password);
                     System.out.println("Orders JSON: " + response);
                     break;
-                case 4: break whileLoop;
+                case 4:
+                    number = logik.getPartnersA(username, password);
+                    System.out.println("Antal partnere i DB: " + number);
+                    break;
+                case 5:
+                    number = logik.getOrdersA(username, password);
+                    System.out.println("Antal ordere i DB: " + number);
+                    break;
+                case 6: break whileLoop;
                 default: System.out.println("Ugyldigt tal, prøv igen");
             }
         }
