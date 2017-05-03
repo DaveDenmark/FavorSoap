@@ -37,7 +37,7 @@ public class Logik {
             return false;
         }
         ba.setEkstraFelt(bruger, adgangskode, "auth", true);
-        ba.setEkstraFelt(bruger, adgangskode, "timer", System.currentTimeMillis()+10000);
+        ba.setEkstraFelt(bruger, adgangskode, "timer", System.currentTimeMillis()+100000);
         
         return true;
     }
@@ -143,7 +143,7 @@ public class Logik {
         String response;
         int count = 0;
         if (checkAuth(brugerNavn, adgangskode)) {
-            response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/clients/");
+            response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
             if (response != null) {
                 try {
                     JSONObject jsonObj = new JSONObject(response);
@@ -172,7 +172,7 @@ public class Logik {
         String response;
         int count = 0;
         if (checkAuth(brugerNavn, adgangskode)) {
-            response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/partners/");
+            response = makeServiceCall("https://favordrop.firebaseio.com/partners.json");
             if (response != null) {
                 try {
                     JSONObject jsonObj = new JSONObject(response);
@@ -197,21 +197,21 @@ public class Logik {
         }
     }
     
-    public Object getOrdersA(String brugerNavn, String adgangskode) {
+    public Object getSuccededOrdersA(String brugerNavn, String adgangskode) {
         String response;
         int count = 0;
         if (checkAuth(brugerNavn, adgangskode)) {
-            response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/orders/");
+            response = makeServiceCall("https://favordrop.firebaseio.com/orders/completed.json");
             if (response != null) {
                 try {
                     JSONObject jsonObj = new JSONObject(response);
-                    JSONObject orders = jsonObj.getJSONObject("completed");
+                   // JSONObject orders = jsonObj.getJSONObject("completed");
                     // Getting JSON Array node
-                    Iterator<?> keys = orders.keys();
+                    Iterator<?> keys = jsonObj.keys();
                     
                     while ( keys.hasNext() ) {
                         String key = (String) keys.next();
-                        if (orders.get(key) instanceof JSONObject) {
+                        if (jsonObj.get(key) instanceof JSONObject) {
                             count++;
                         }
                     }
