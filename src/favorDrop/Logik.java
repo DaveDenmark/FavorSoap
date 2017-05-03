@@ -139,7 +139,7 @@ public class Logik {
         return sb.toString();
     }
     
-    public int getClientsA(String brugerNavn, String adgangskode) {
+    public Object getClientsA(String brugerNavn, String adgangskode) {
         String response;
         int count = 0;
         if (checkAuth(brugerNavn, adgangskode)) {
@@ -160,14 +160,15 @@ public class Logik {
                     e.printStackTrace();
                 }
             }
+            return count;
         }
         else {
             response = "Adgang nægtet";
+            return response;
         }
-        return count;
     }
     
-    public int getPartnersA(String brugerNavn, String adgangskode) {
+    public Object getPartnersA(String brugerNavn, String adgangskode) {
         String response;
         int count = 0;
         if (checkAuth(brugerNavn, adgangskode)) {
@@ -188,14 +189,15 @@ public class Logik {
                     e.printStackTrace();
                 }
             }
+            return count;
         }
         else {
             response = "Adgang nægtet";
+            return response;
         }
-        return count;
     }
     
-    public int getOrdersA(String brugerNavn, String adgangskode) {
+    public Object getOrdersA(String brugerNavn, String adgangskode) {
         String response;
         int count = 0;
         if (checkAuth(brugerNavn, adgangskode)) {
@@ -217,10 +219,11 @@ public class Logik {
                     e.printStackTrace();
                 }
             }
+            return count;
         }
         else {
             response = "Adgang nægtet";
+            return response;
         }
-        return count;
     }
 }

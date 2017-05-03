@@ -31,8 +31,8 @@ public class FavorCmd {
         boolean loggedIn = false;
         Scanner scan = new Scanner(System.in);
         String username = "", password = "";
-        String response;
         int number;
+        Object returned;
         
         while (!loggedIn){
             System.out.println("Indtast brugernavn");
@@ -66,24 +66,24 @@ public class FavorCmd {
                 continue;}
             switch(number) {
                 case 1:
-                    number = logik.getClientsA(username, password);
-                    System.out.println("\n"+"Antal klienter i DB: " + number);
+                    returned = logik.getClientsA(username, password);
+                    System.out.println("\n"+"Antal klienter i DB: " + returned);
                     break;
                 case 2:
-                    response = logik.getClients(username, password);
-                    System.out.println("\n"+"Klienter JSON: " + response);
+                    returned = logik.getClients(username, password);
+                    System.out.println("\n"+"Klienter JSON: " + returned);
                     break;
                 case 3:
-                    response = logik.getOrders(username, password);
-                    System.out.println("\n"+"Orders JSON: " + response);
+                    returned = logik.getOrders(username, password);
+                    System.out.println("\n"+"Orders JSON: " + returned);
                     break;
                 case 4:
-                    number = logik.getPartnersA(username, password);
-                    System.out.println("\n"+"Antal partnere i DB: " + number);
+                    returned = logik.getPartnersA(username, password);
+                    System.out.println("\n"+"Antal partnere i DB: " + returned);
                     break;
                 case 5:
-                    number = logik.getOrdersA(username, password);
-                    System.out.println("\n"+"Antal ordre i DB: " + number);
+                    returned = logik.getOrdersA(username, password);
+                    System.out.println("\n"+"Antal ordre i DB: " + returned);
                     break;
                 case 6: 
                     scan.close();
