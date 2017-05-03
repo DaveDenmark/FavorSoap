@@ -37,12 +37,14 @@ public class Logik {
             return false;
         }
         ba.setEkstraFelt(bruger, adgangskode, "auth", true);
+        ba.setEkstraFelt(bruger, adgangskode, "timer", System.currentTimeMillis()+10000);
+        
         return true;
     }
     
     public boolean checkAuth(String brugerNavn, String adgangskode) {
         try {
-            if((boolean)ba.getEkstraFelt(brugerNavn, adgangskode, "auth") == true) {
+            if(((boolean)ba.getEkstraFelt(brugerNavn, adgangskode, "auth") == true) && (System.currentTimeMillis()<=(long)ba.getEkstraFelt(brugerNavn, adgangskode, "timer"))) {     
                 return true;
             }
         }
@@ -61,9 +63,9 @@ public class Logik {
             // read the response
             InputStream in = new BufferedInputStream(conn.getInputStream());
             response = convertStreamToString(in);
-        } catch (MalformedURLException e) {           
-        } catch (ProtocolException e) {          
-        } catch (IOException e) {      
+        } catch (MalformedURLException e) {
+        } catch (ProtocolException e) {
+        } catch (IOException e) {
         } catch (Exception e) {
         }
         return response;
@@ -88,6 +90,9 @@ public class Logik {
             if (checkAuth(brugerNavn, adgangskode)) {
                 response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/clients/");
             }
+            else {
+                response = "Adgang nægtet";
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -100,6 +105,9 @@ public class Logik {
         try {
             if (checkAuth(brugerNavn, adgangskode)) {
                 response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/partners/");
+            }
+            else {
+                response = "Adgang nægtet";
             }
         }
         catch (Exception e) {
@@ -153,6 +161,9 @@ public class Logik {
                 }
             }
         }
+        else {
+            response = "Adgang nægtet";
+        }
         return count;
     }
     
@@ -177,6 +188,9 @@ public class Logik {
                     e.printStackTrace();
                 }
             }
+        }
+        else {
+            response = "Adgang nægtet";
         }
         return count;
     }
@@ -203,6 +217,9 @@ public class Logik {
                     e.printStackTrace();
                 }
             }
+        }
+        else {
+            response = "Adgang nægtet";
         }
         return count;
     }
