@@ -52,11 +52,9 @@ public class FavorCmd {
         
         whileLoop: while(true) {
             System.out.println("\n"+"Press 1 for number of clients in DB");
-            System.out.println("Press 2 for client JSON");
-            System.out.println("Press 3 for orders JSON");
-            System.out.println("Press 4 for number of partners in DB");
-            System.out.println("Press 5 for number of completed orders in DB");
-            System.out.println("Press 6 to terminate");
+            System.out.println("Press 2 for number of partners in DB");
+            System.out.println("Press 3 for number of completed orders in DB");
+            System.out.println("Press 4 to terminate");
             if (scan.hasNextInt()){
                 number=scan.nextInt();
                 scan.nextLine();
@@ -70,22 +68,14 @@ public class FavorCmd {
                     System.out.println("\n"+"Antal klienter i DB: " + returned);
                     break;
                 case 2:
-                    returned = logik.getClients(username, password);
-                    System.out.println("\n"+"Klienter JSON: " + returned);
-                    break;
-                case 3:
-                    returned = logik.getOrders(username, password);
-                    System.out.println("\n"+"Orders JSON: " + returned);
-                    break;
-                case 4:
                     returned = logik.getPartnersA(username, password);
                     System.out.println("\n"+"Antal partnere i DB: " + returned);
                     break;
-                case 5:
+                case 3:
                     returned = logik.getSuccededOrdersA(username, password);
                     System.out.println("\n"+"Antal gennemførte ordre i DB: " + returned);
                     break;
-                case 6: 
+                case 4: 
                     scan.close();
                     break whileLoop;
                 default: System.out.println("\n"+"Ugyldigt tal, prøv igen");

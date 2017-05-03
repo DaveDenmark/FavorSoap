@@ -71,51 +71,6 @@ public class Logik {
         return response;
     }
     
-    public String getOrders(String brugerNavn, String adgangskode) {
-        String response = null;
-        try {
-            if (checkAuth(brugerNavn, adgangskode)) {
-                response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/orders/");
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return response;
-    }
-    
-    public String getClients(String brugerNavn, String adgangskode) {
-        String response = null;
-        try {
-            if (checkAuth(brugerNavn, adgangskode)) {
-                response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/clients/");
-            }
-            else {
-                response = "Adgang nægtet";
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return response;
-    }
-    
-    public String getPartners(String brugerNavn, String adgangskode) {
-        String response = null;
-        try {
-            if (checkAuth(brugerNavn, adgangskode)) {
-                response = makeServiceCall("http://52.213.91.0:8080/FavorDrop_war/partners/");
-            }
-            else {
-                response = "Adgang nægtet";
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return response;
-    }
-    
     private String convertStreamToString(InputStream in) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         StringBuilder sb = new StringBuilder();
