@@ -24,6 +24,7 @@ public class Logik {
     private String brugerNavn;
     private String adgangsKode;
     private String auth;
+    private final int logInTimeMax = 600000;
     
     public boolean login(String bruger, String adgangskode) throws Exception {
         try {
@@ -37,7 +38,7 @@ public class Logik {
             return false;
         }
         ba.setEkstraFelt(bruger, adgangskode, "auth", true);
-        ba.setEkstraFelt(bruger, adgangskode, "timer", System.currentTimeMillis()+100000);
+        ba.setEkstraFelt(bruger, adgangskode, "timer", System.currentTimeMillis()+logInTimeMax);
         
         return true;
     }
