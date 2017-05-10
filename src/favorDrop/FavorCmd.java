@@ -80,16 +80,15 @@ public class FavorCmd {
                     break;
                 case 4:
                     System.out.println("Indtast OrdreID som du vil slette");
-                    scan.nextLine();
-                    OID = scan.next();
+                    OID = scan.nextLine();
                     returned = logik.deleteorderNew(username, password, OID);
                     System.out.println(returned);
                     break;
                 case 5:
                     System.out.println("Indtast OrdreID som du vil slette");
-                    scan.nextLine();
-                    OID = scan.next();
+                    OID = scan.nextLine();
                     returned = logik.deleteorderInService(username, password, OID);
+                    System.out.println(returned);
                     break;
                 case 6:
                     scan.close();
