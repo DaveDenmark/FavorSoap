@@ -51,10 +51,13 @@ public class FavorCmd {
         }
         
         whileLoop: while(true) {
-            System.out.println("\n"+"Press 1 for number of clients in DB");
-            System.out.println("Press 2 for number of partners in DB");
-            System.out.println("Press 3 for number of completed orders in DB");
-            System.out.println("Press 4 to terminate");
+            String OID;
+            System.out.println("\n"+"Tryk 1 for at se antal bruger i DB");
+            System.out.println("Tryk 2 for at se antal partnere i DB");
+            System.out.println("Tryk 3 for at se antal færdige ordre");
+            System.out.println("Tryk 4 for at slette en ny ordre");
+            System.out.println("Tryk 5 for at slette en igangværende ordre");
+            System.out.println("Tryk 6 for at afslutte");
             if (scan.hasNextInt()){
                 number=scan.nextInt();
                 scan.nextLine();
@@ -75,7 +78,20 @@ public class FavorCmd {
                     returned = logik.getSuccededOrdersA(username, password);
                     System.out.println("\n"+"Antal gennemførte ordre i DB: " + returned);
                     break;
-                case 4: 
+                case 4:
+                    System.out.println("Indtast OrdreID som du vil slette");
+                    scan.nextLine();
+                    OID = scan.next();
+                    returned = logik.deleteorderNew(username, password, OID);
+                    System.out.println(returned);
+                    break;
+                case 5:
+                    System.out.println("Indtast OrdreID som du vil slette");
+                    scan.nextLine();
+                    OID = scan.next();
+                    returned = logik.deleteorderInService(username, password, OID);
+                    break;
+                case 6:
                     scan.close();
                     break whileLoop;
                 default: System.out.println("\n"+"Ugyldigt tal, prøv igen");

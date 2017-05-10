@@ -13,4 +13,6 @@ public interface LogikI {
     @WebMethod Object getClientsA(String user, String adgangskode);
     @WebMethod Object getPartnersA(String user, String adgangskode);
     @WebMethod Object getSuccededOrdersA(String user, String adgangskode);
+    @WebMethod Object deleteorderInService(String user, String adgangskode, String OID);
+    @WebMethod Object deleteorderNew(String user, String adgangskode, String OID);
 }

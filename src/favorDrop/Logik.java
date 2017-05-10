@@ -95,6 +95,23 @@ public class Logik {
         return sb.toString();
     }
     
+    public String makeServiceCallDelete(String reqUrl) {
+        String response = null;
+        try {
+            URL url = new URL(reqUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
+            // read the response
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+            response = convertStreamToString(in);
+        } catch (MalformedURLException e) {
+        } catch (ProtocolException e) {
+        } catch (IOException e) {
+        } catch (Exception e) {
+        }
+        return response;
+    }
+    
     public Object getClientsA(String brugerNavn, String adgangskode) {
         String response;
         int count = 0;
@@ -182,4 +199,29 @@ public class Logik {
             return response;
         }
     }
+    
+     public Object deleteorderNew(String brugerNavn, String adgangskode, String OID) {
+      String response;
+        if (checkAuth(brugerNavn, adgangskode)) {
+             response = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/new/"+OID+".json");
+        } 
+        else {
+            response = "Adgang nægtet";
+        
+        }
+      return response;
+      }
+      
+     public Object deleteorderInService(String brugerNavn, String adgangskode, String OID) {
+        String response;
+        if (checkAuth(brugerNavn, adgangskode)) {
+             response = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/inservice/"+OID+".json");
+        } 
+        else {
+            response = "Adgang nægtet";
+        
+        }
+      return response;
+      }   
 }
+    
