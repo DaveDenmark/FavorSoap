@@ -42,7 +42,7 @@ public class FavorCmd {
             password = scan.next();
             
             login = logik.login(username, password);
-            if(login == "glem det") {
+            if("Not authorized".equals(login)) {
                 System.out.println("\n"+"Forkert brugernavn eller password. Prøv igen.");
             }
             else {
@@ -81,13 +81,13 @@ public class FavorCmd {
                 case 4:
                     System.out.println("Indtast OrdreID som du vil slette");
                     OID = scan.nextLine();
-                    returned = logik.deleteorderNew(login, OID);
+                    returned = logik.deleteOrderNew(login, OID);
                     System.out.println(returned);
                     break;
                 case 5:
                     System.out.println("Indtast OrdreID som du vil slette");
                     OID = scan.nextLine();
-                    returned = logik.deleteorderInService(login, OID);
+                    returned = logik.deleteOrderInService(login, OID);
                     System.out.println(returned);
                     break;
                 case 6:

@@ -28,6 +28,8 @@ import javax.xml.bind.DatatypeConverter;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebService(endpointInterface = "favorDrop.LogikI")
 public class Logik {
@@ -44,14 +46,16 @@ public class Logik {
             Service service = Service.create(url, qname);
             ba = service.getPort(Brugeradmin.class);
             ba.hentBruger(bruger, adgangskode);
-            return createJWT(bruger, "Soap Server", "Favor Drop Client", System.currentTimeMillis()+logInTimeMax );
         }
         catch (Throwable e) {
             return "Not authorized";
         }
+        
+        return createJWT(bruger, "Soap Server", "Favor Drop Client", System.currentTimeMillis()+logInTimeMax);
     }
     
     public String makeServiceCall(String reqUrl) {
+        System.out.println("starter service kald");
         String response = null;
         try {
             URL url = new URL(reqUrl);
@@ -65,6 +69,7 @@ public class Logik {
         } catch (IOException e) {
         } catch (Exception e) {
         }
+        System.out.println("slutter service kald");
         return response;
     }
     
@@ -201,44 +206,80 @@ public class Logik {
         }
     }
     
-     public Object deleteorderNew(String token, String OID) {
+     public Object deleteOrderNew(String token, String OID) {
       String response;
         try {
             parseJWT(token);
-            response = makeServiceCall("https://favordrop.firebaseio.com/orders/new"+OID+".json");
-            System.out.println("response 1: " + response);
-            System.out.println(response.equals("null"));
-            if (!(response.equals("null"))) {
-                response = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/new/"+OID+".json");
+            response = makeServiceCall("https://favordrop.firebaseio.com/orders/new/"+OID+".json");
+            
+            System.out.println(response);
+            
+            if (!("null\n".equals(response))) {
                 System.out.println("response 2: " + response);
+                JSONObject jsonObj = new JSONObject(response);
+                String clientID = jsonObj.getString("client id");
+                String a = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/new/"+OID+".json");
+                String b = makeServiceCallDelete("https://favordrop.firebaseio.com/clients/" + clientID + "/orders/new/"+OID+".json");
+                
+                if ("null\n".equals(a) && "null\n".equals(b)) {
+                    response = "Ordren blev slettet med succes";
+                }
+                else {
+                    response = "Noget gik galt under sletningen";
+                }
+                
             }
             else {
                 response = "Du forsøger at slette en ikke eksisterende ordre";
             }
         } 
+        catch (JSONException ex) {
+            Logger.getLogger(Logik.class.getName()).log(Level.SEVERE, null, ex);
+            response = "noget gik galt med data formatteringen. Kontakt adminstrator";
+        }
         catch (Exception e) {
             response = "Adgang nægtet";
             System.out.println("response 4: " + response);
-        
         }
       return response;
       }
       
-     public Object deleteorderInService(String token, String OID) {
+     public Object deleteOrderInService(String token, String OID) {
         String response;
         try {
             parseJWT(token);
-            response = makeServiceCall("https://favordrop.firebaseio.com/orders/inservice"+OID+".json");
+            response = makeServiceCall("https://favordrop.firebaseio.com/orders/inservice/"+OID+".json");
             
-            if(response == null) {
-                response = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/inservice/"+OID+".json");
+            System.out.println(response);
+            
+            if (!("null\n".equals(response))) {
+                System.out.println("response 2: " + response);
+                JSONObject jsonObj = new JSONObject(response);
+                String uID = jsonObj.getString("client id");
+                String pID = jsonObj.getString("partner id");
+                String a = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/inservice/"+OID+".json");
+                String b = makeServiceCallDelete("https://favordrop.firebaseio.com/clients/" + uID + "/orders/inservice/"+OID+".json");
+                String c = makeServiceCallDelete("https://favordrop.firebaseio.com/partners/" + pID + "/orders/inservice/"+OID+".json");
+                
+                if ("null\n".equals(a) && "null\n".equals(b) && "null\n".equals(c)) {
+                    response = "Ordren blev slettet med succes";
+                }
+                else {
+                    response = "Noget gik galt under sletningen";
+                }
+                
             }
-            else 
+            else {
                 response = "Du forsøger at slette en ikke eksisterende ordre";
+            }
         } 
-        catch(Exception e) {
+        catch (JSONException ex) {
+            Logger.getLogger(Logik.class.getName()).log(Level.SEVERE, null, ex);
+            response = "noget gik galt med data formatteringen. Kontakt adminstrator";
+        }
+        catch (Exception e) {
             response = "Adgang nægtet";
-        
+            System.out.println("response 4: " + response);
         }
       return response;
       }   
