@@ -18,6 +18,7 @@ import javax.xml.ws.Service;
  */
 public class FavorCmd {
     
+    
     public static void main(String[] args) throws MalformedURLException, Exception{
         run();
     }
@@ -30,7 +31,7 @@ public class FavorCmd {
         LogikI logik = service.getPort(LogikI.class);
         boolean loggedIn = false;
         Scanner scan = new Scanner(System.in);
-        String username = "", password = "";
+        String username = "", password = "", login = "";
         int number;
         Object returned;
         
@@ -40,9 +41,8 @@ public class FavorCmd {
             System.out.println("\n"+"Indtast password");
             password = scan.next();
             
-            boolean login = logik.login(username, password);
-            
-            if(!login) {
+            login = logik.login(username, password);
+            if(login == "glem det") {
                 System.out.println("\n"+"Forkert brugernavn eller password. Prøv igen.");
             }
             else {
@@ -67,27 +67,27 @@ public class FavorCmd {
                 continue;}
             switch(number) {
                 case 1:
-                    returned = logik.getClientsA(username, password);
+                    returned = logik.getClientsA(login);
                     System.out.println("\n"+"Antal klienter i DB: " + returned);
                     break;
                 case 2:
-                    returned = logik.getPartnersA(username, password);
+                    returned = logik.getPartnersA(login);
                     System.out.println("\n"+"Antal partnere i DB: " + returned);
                     break;
                 case 3:
-                    returned = logik.getSuccededOrdersA(username, password);
+                    returned = logik.getSuccededOrdersA(login);
                     System.out.println("\n"+"Antal gennemførte ordre i DB: " + returned);
                     break;
                 case 4:
                     System.out.println("Indtast OrdreID som du vil slette");
                     OID = scan.nextLine();
-                    returned = logik.deleteorderNew(username, password, OID);
+                    returned = logik.deleteorderNew(login, OID);
                     System.out.println(returned);
                     break;
                 case 5:
                     System.out.println("Indtast OrdreID som du vil slette");
                     OID = scan.nextLine();
-                    returned = logik.deleteorderInService(username, password, OID);
+                    returned = logik.deleteorderInService(login, OID);
                     System.out.println(returned);
                     break;
                 case 6:

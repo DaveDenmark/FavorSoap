@@ -1,6 +1,7 @@
 package favorDrop;
 
 import brugerautorisation.transport.soap.Brugeradmin;
+import io.jsonwebtoken.JwtBuilder;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +17,16 @@ import java.net.URL;
 import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.crypto.MacProvider;
+import java.security.Key;
+import java.util.Date;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import javax.xml.bind.DatatypeConverter;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.Claims;
 
 @WebService(endpointInterface = "favorDrop.LogikI")
 public class Logik {
@@ -26,33 +36,18 @@ public class Logik {
     private String auth;
     private final int logInTimeMax = 600000;
     
-    public boolean login(String bruger, String adgangskode) throws Exception {
+    public String login(String bruger, String adgangskode) throws Exception {
         try {
             URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
             QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
             Service service = Service.create(url, qname);
             ba = service.getPort(Brugeradmin.class);
             ba.hentBruger(bruger, adgangskode);
+            return createJWT(bruger, "Soap Server", "Favor Drop Client", System.currentTimeMillis()+logInTimeMax );
         }
         catch (Throwable e) {
-            return false;
+            return "glem det";
         }
-        ba.setEkstraFelt(bruger, adgangskode, "auth", true);
-        ba.setEkstraFelt(bruger, adgangskode, "timer", System.currentTimeMillis()+logInTimeMax);
-        
-        return true;
-    }
-    
-    public boolean checkAuth(String brugerNavn, String adgangskode) {
-        try {
-            if(((boolean)ba.getEkstraFelt(brugerNavn, adgangskode, "auth") == true) && (System.currentTimeMillis()<=(long)ba.getEkstraFelt(brugerNavn, adgangskode, "timer"))) {     
-                return true;
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
     }
     
     public String makeServiceCall(String reqUrl) {
@@ -112,10 +107,13 @@ public class Logik {
         return response;
     }
     
-    public Object getClientsA(String brugerNavn, String adgangskode) {
+    public Object getClientsA(String token) {
         String response;
         int count = 0;
-        if (checkAuth(brugerNavn, adgangskode)) {
+        
+        try { 
+            parseJWT(token);
+            System.out.println("Ægtetete token: " + token);
             response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
             if (response != null) {
                 try {
@@ -135,16 +133,17 @@ public class Logik {
             }
             return count;
         }
-        else {
-            response = "Adgang nægtet";
-            return response;
+        catch(Exception e) {
+            System.out.println("lorte token: " + token);
+                return "Adgang nægtet";
         }
     }
     
-    public Object getPartnersA(String brugerNavn, String adgangskode) {
+    public Object getPartnersA(String token) {
         String response;
         int count = 0;
-        if (checkAuth(brugerNavn, adgangskode)) {
+        try {
+            parseJWT(token);
             response = makeServiceCall("https://favordrop.firebaseio.com/partners.json");
             if (response != null) {
                 try {
@@ -164,16 +163,17 @@ public class Logik {
             }
             return count;
         }
-        else {
+        catch(Exception e) {
             response = "Adgang nægtet";
             return response;
         }
     }
     
-    public Object getSuccededOrdersA(String brugerNavn, String adgangskode) {
+    public Object getSuccededOrdersA(String token) {
         String response;
         int count = 0;
-        if (checkAuth(brugerNavn, adgangskode)) {
+        try {
+            parseJWT(token);
             response = makeServiceCall("https://favordrop.firebaseio.com/orders/completed.json");
             if (response != null) {
                 try {
@@ -194,34 +194,82 @@ public class Logik {
             }
             return count;
         }
-        else {
+        catch(Exception e) {
             response = "Adgang nægtet";
             return response;
         }
     }
     
-     public Object deleteorderNew(String brugerNavn, String adgangskode, String OID) {
+     public Object deleteorderNew(String token, String OID) {
       String response;
-        if (checkAuth(brugerNavn, adgangskode)) {
-             response = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/new/"+OID+".json");
+        try {
+            parseJWT(token);
+            response = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/new/"+OID+".json");
         } 
-        else {
+        catch (Exception e) {
             response = "Adgang nægtet";
         
         }
       return response;
       }
       
-     public Object deleteorderInService(String brugerNavn, String adgangskode, String OID) {
+     public Object deleteorderInService(String token, String OID) {
         String response;
-        if (checkAuth(brugerNavn, adgangskode)) {
+        try {
+            parseJWT(token);
              response = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/inservice/"+OID+".json");
         } 
-        else {
+        catch(Exception e) {
             response = "Adgang nægtet";
         
         }
       return response;
       }   
+     
+     //Sample method to construct a JWT
+private String createJWT(String id, String issuer, String subject, long ttlMillis) {
+ 
+    //The JWT signature algorithm we will be using to sign the token
+    SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+ 
+    long nowMillis = System.currentTimeMillis();
+    Date now = new Date(nowMillis);
+ 
+    //We will sign our JWT with our ApiKey secret
+    byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("detenhemmelighed");
+    Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+ 
+    //Let's set the JWT Claims
+    JwtBuilder builder = Jwts.builder().setId(id)
+                                .setIssuedAt(now)
+                                .setSubject(subject)
+                                .setIssuer(issuer)
+                                .signWith(signatureAlgorithm, signingKey);
+ 
+    //if it has been specified, let's add the expiration
+    if (ttlMillis >= 0) {
+    long expMillis = nowMillis + ttlMillis;
+        Date exp = new Date(expMillis);
+        builder.setExpiration(exp);
+    }
+ 
+    //Builds the JWT and serializes it to a compact, URL-safe string
+    return builder.compact();
+}
+
+//Sample method to validate and read the JWT
+private void parseJWT(String jwt) {
+ 
+    //This line will throw an exception if it is not a signed JWS (as expected)
+    Claims claims = Jwts.parser()         
+       .setSigningKey(DatatypeConverter.parseBase64Binary("detenhemmelighed"))
+       .parseClaimsJws(jwt).getBody();
+    System.out.println("ID: " + claims.getId());
+    System.out.println("Subject: " + claims.getSubject());
+    System.out.println("Issuer: " + claims.getIssuer());
+    System.out.println("Expiration: " + claims.getExpiration());
+}
+
+
 }
     
