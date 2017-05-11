@@ -15,4 +15,7 @@ public interface LogikI {
     @WebMethod Object getSuccededOrdersA(String token);
     @WebMethod Object deleteorderInService(String token, String OID);
     @WebMethod Object deleteorderNew(String token, String OID);
+    @WebMethod Object getOrdersInService(String token);
+    @WebMethod Object getOrdersNew(String token);
+    
 }

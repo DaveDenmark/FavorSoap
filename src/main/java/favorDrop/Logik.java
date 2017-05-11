@@ -27,6 +27,7 @@ import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.DatatypeConverter;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
+import java.util.ArrayList;
 
 @WebService(endpointInterface = "favorDrop.LogikI")
 public class Logik {
@@ -46,7 +47,7 @@ public class Logik {
             return createJWT(bruger, "Soap Server", "Favor Drop Client", System.currentTimeMillis()+logInTimeMax );
         }
         catch (Throwable e) {
-            return "glem det";
+            return "Not authorized";
         }
     }
     
@@ -204,10 +205,20 @@ public class Logik {
       String response;
         try {
             parseJWT(token);
-            response = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/new/"+OID+".json");
+            response = makeServiceCall("https://favordrop.firebaseio.com/orders/new"+OID+".json");
+            System.out.println("response 1: " + response);
+            System.out.println(response.equals("null"));
+            if (!(response.equals("null"))) {
+                response = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/new/"+OID+".json");
+                System.out.println("response 2: " + response);
+            }
+            else {
+                response = "Du forsøger at slette en ikke eksisterende ordre";
+            }
         } 
         catch (Exception e) {
             response = "Adgang nægtet";
+            System.out.println("response 4: " + response);
         
         }
       return response;
@@ -217,7 +228,13 @@ public class Logik {
         String response;
         try {
             parseJWT(token);
-             response = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/inservice/"+OID+".json");
+            response = makeServiceCall("https://favordrop.firebaseio.com/orders/inservice"+OID+".json");
+            
+            if(response == null) {
+                response = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/inservice/"+OID+".json");
+            }
+            else 
+                response = "Du forsøger at slette en ikke eksisterende ordre";
         } 
         catch(Exception e) {
             response = "Adgang nægtet";
@@ -269,6 +286,71 @@ private void parseJWT(String jwt) {
     System.out.println("Issuer: " + claims.getIssuer());
     System.out.println("Expiration: " + claims.getExpiration());
 }
+
+public Object getOrdersInService(String token) {
+        String response;
+        try {
+            parseJWT(token);
+            response = makeServiceCall("https://favordrop.firebaseio.com/orders/inservice.json");
+            ArrayList<String> ordersList = new ArrayList<String>();
+            if (response != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(response);
+                   // JSONObject orders = jsonObj.getJSONObject("completed");
+                    // Getting JSON Array node
+                    Iterator<?> keys = jsonObj.keys();
+                    
+                    while ( keys.hasNext() ) {
+                        String key = (String) keys.next();
+                        if (jsonObj.get(key) instanceof JSONObject) {
+                            ordersList.add(key);
+                        }
+                    }
+                } catch (final JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println(ordersList);
+            return ordersList;
+        }
+        catch(Exception e) {
+            response = "Adgang nægtet";
+            return response;
+        }
+    }
+
+public Object getOrdersNew(String token) {
+        String response;
+        try {
+            parseJWT(token);
+            response = makeServiceCall("https://favordrop.firebaseio.com/orders/new.json");
+            ArrayList<String> ordersList = new ArrayList<String>();
+            if (response != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(response);
+                   // JSONObject orders = jsonObj.getJSONObject("completed");
+                    // Getting JSON Array node
+                    Iterator<?> keys = jsonObj.keys();
+                    
+                    while ( keys.hasNext() ) {
+                        String key = (String) keys.next();
+                        if (jsonObj.get(key) instanceof JSONObject) {
+                            ordersList.add(key);
+                        }
+                    }
+                } catch (final JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println(ordersList);
+            return ordersList;
+        }
+        catch(Exception e) {
+            response = "Adgang nægtet";
+            return response;
+        }
+    }
+
 
 
 }
