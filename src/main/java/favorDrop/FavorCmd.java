@@ -75,7 +75,7 @@ public class FavorCmd {
                     System.out.println("\n"+"Antal partnere i DB: " + returned);
                     break;
                 case 3:
-                    returned = logik.getSuccededOrdersA(login);
+                    returned = logik.getCompletedOrdersLength(login);
                     System.out.println("\n"+"Antal gennemførte ordre i DB: " + returned);
                     break;
                 case 4:

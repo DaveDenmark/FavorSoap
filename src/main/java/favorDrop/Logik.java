@@ -175,7 +175,7 @@ public class Logik {
         }
     }
     
-    public Object getSuccededOrdersA(String token) {
+    public Object getCompletedOrdersLength(String token) {
         String response;
         int count = 0;
         try {
@@ -328,7 +328,7 @@ private void parseJWT(String jwt) {
     System.out.println("Expiration: " + claims.getExpiration());
 }
 
-public Object getOrdersInService(String token) {
+public String getOrdersInService(String token) {
         String response;
         try {
             parseJWT(token);
@@ -352,7 +352,7 @@ public Object getOrdersInService(String token) {
                 }
             }
             System.out.println(ordersList);
-            return ordersList;
+            return ordersList.toString();
         }
         catch(Exception e) {
             response = "Adgang nægtet";
@@ -360,7 +360,7 @@ public Object getOrdersInService(String token) {
         }
     }
 
-public Object getOrdersNew(String token) {
+public String getOrdersNew(String token) {
         String response;
         try {
             parseJWT(token);
@@ -384,7 +384,7 @@ public Object getOrdersNew(String token) {
                 }
             }
             System.out.println(ordersList);
-            return ordersList;
+            return ordersList.toString();
         }
         catch(Exception e) {
             response = "Adgang nægtet";
