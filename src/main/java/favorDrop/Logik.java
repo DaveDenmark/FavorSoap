@@ -117,7 +117,7 @@ public class Logik {
         String response;
         int count = 0;
         
-        try { 
+        try {
             parseJWT(token);
             System.out.println("Ægtetete token: " + token);
             response = makeServiceCall("https://favordrop.firebaseio.com/clients.json");
@@ -141,7 +141,7 @@ public class Logik {
         }
         catch(Exception e) {
             System.out.println("lorte token: " + token);
-                return "Adgang nægtet";
+            return "Adgang nægtet";
         }
     }
     
@@ -184,7 +184,7 @@ public class Logik {
             if (response != null) {
                 try {
                     JSONObject jsonObj = new JSONObject(response);
-                   // JSONObject orders = jsonObj.getJSONObject("completed");
+                    // JSONObject orders = jsonObj.getJSONObject("completed");
                     // Getting JSON Array node
                     Iterator<?> keys = jsonObj.keys();
                     
@@ -206,8 +206,8 @@ public class Logik {
         }
     }
     
-     public Object deleteOrderNew(String token, String OID) {
-      String response;
+    public Object deleteOrderNew(String token, String OID) {
+        String response;
         try {
             parseJWT(token);
             response = makeServiceCall("https://favordrop.firebaseio.com/orders/new/"+OID+".json");
@@ -232,7 +232,7 @@ public class Logik {
             else {
                 response = "Du forsøger at slette en ikke eksisterende ordre";
             }
-        } 
+        }
         catch (JSONException ex) {
             Logger.getLogger(Logik.class.getName()).log(Level.SEVERE, null, ex);
             response = "noget gik galt med data formatteringen. Kontakt adminstrator";
@@ -241,10 +241,10 @@ public class Logik {
             response = "Adgang nægtet";
             System.out.println("response 4: " + response);
         }
-      return response;
-      }
-      
-     public Object deleteOrderInService(String token, String OID) {
+        return response;
+    }
+    
+    public Object deleteOrderInService(String token, String OID) {
         String response;
         try {
             parseJWT(token);
@@ -272,7 +272,7 @@ public class Logik {
             else {
                 response = "Du forsøger at slette en ikke eksisterende ordre";
             }
-        } 
+        }
         catch (JSONException ex) {
             Logger.getLogger(Logik.class.getName()).log(Level.SEVERE, null, ex);
             response = "noget gik galt med data formatteringen. Kontakt adminstrator";
@@ -281,54 +281,54 @@ public class Logik {
             response = "Adgang nægtet";
             System.out.println("response 4: " + response);
         }
-      return response;
-      }   
-     
-     //Sample method to construct a JWT
-private String createJWT(String id, String issuer, String subject, long ttlMillis) {
- 
-    //The JWT signature algorithm we will be using to sign the token
-    SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
- 
-    long nowMillis = System.currentTimeMillis();
-    Date now = new Date(nowMillis);
- 
-    //We will sign our JWT with our ApiKey secret
-    byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("detenhemmelighed");
-    Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
- 
-    //Let's set the JWT Claims
-    JwtBuilder builder = Jwts.builder().setId(id)
-                                .setIssuedAt(now)
-                                .setSubject(subject)
-                                .setIssuer(issuer)
-                                .signWith(signatureAlgorithm, signingKey);
- 
-    //if it has been specified, let's add the expiration
-    if (ttlMillis >= 0) {
-    long expMillis = nowMillis + ttlMillis;
-        Date exp = new Date(expMillis);
-        builder.setExpiration(exp);
+        return response;
     }
- 
-    //Builds the JWT and serializes it to a compact, URL-safe string
-    return builder.compact();
-}
-
+    
+    //Sample method to construct a JWT
+    private String createJWT(String id, String issuer, String subject, long ttlMillis) {
+        
+        //The JWT signature algorithm we will be using to sign the token
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+        
+        long nowMillis = System.currentTimeMillis();
+        Date now = new Date(nowMillis);
+        
+        //We will sign our JWT with our ApiKey secret
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("detenhemmelighed");
+        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+        
+        //Let's set the JWT Claims
+        JwtBuilder builder = Jwts.builder().setId(id)
+                .setIssuedAt(now)
+                .setSubject(subject)
+                .setIssuer(issuer)
+                .signWith(signatureAlgorithm, signingKey);
+        
+        //if it has been specified, let's add the expiration
+        if (ttlMillis >= 0) {
+            long expMillis = nowMillis + ttlMillis;
+            Date exp = new Date(expMillis);
+            builder.setExpiration(exp);
+        }
+        
+        //Builds the JWT and serializes it to a compact, URL-safe string
+        return builder.compact();
+    }
+    
 //Sample method to validate and read the JWT
-private void parseJWT(String jwt) {
- 
-    //This line will throw an exception if it is not a signed JWS (as expected)
-    Claims claims = Jwts.parser()         
-       .setSigningKey(DatatypeConverter.parseBase64Binary("detenhemmelighed"))
-       .parseClaimsJws(jwt).getBody();
-    System.out.println("ID: " + claims.getId());
-    System.out.println("Subject: " + claims.getSubject());
-    System.out.println("Issuer: " + claims.getIssuer());
-    System.out.println("Expiration: " + claims.getExpiration());
-}
-
-public String getOrdersInService(String token) {
+    private void parseJWT(String jwt) {
+        
+        //This line will throw an exception if it is not a signed JWS (as expected)
+        Claims claims = Jwts.parser()
+                .setSigningKey(DatatypeConverter.parseBase64Binary("detenhemmelighed"))
+                .parseClaimsJws(jwt).getBody();
+        System.out.println("ID: " + claims.getId());
+        System.out.println("Subject: " + claims.getSubject());
+        System.out.println("Issuer: " + claims.getIssuer());
+        System.out.println("Expiration: " + claims.getExpiration());
+    }
+    
+    public String getOrdersInService(String token) {
         String response;
         try {
             parseJWT(token);
@@ -337,7 +337,7 @@ public String getOrdersInService(String token) {
             if (response != null) {
                 try {
                     JSONObject jsonObj = new JSONObject(response);
-                   // JSONObject orders = jsonObj.getJSONObject("completed");
+                    // JSONObject orders = jsonObj.getJSONObject("completed");
                     // Getting JSON Array node
                     Iterator<?> keys = jsonObj.keys();
                     
@@ -359,8 +359,8 @@ public String getOrdersInService(String token) {
             return response;
         }
     }
-
-public String getOrdersNew(String token) {
+    
+    public String getOrdersNew(String token) {
         String response;
         try {
             parseJWT(token);
@@ -369,7 +369,7 @@ public String getOrdersNew(String token) {
             if (response != null) {
                 try {
                     JSONObject jsonObj = new JSONObject(response);
-                   // JSONObject orders = jsonObj.getJSONObject("completed");
+                    // JSONObject orders = jsonObj.getJSONObject("completed");
                     // Getting JSON Array node
                     Iterator<?> keys = jsonObj.keys();
                     
@@ -391,8 +391,8 @@ public String getOrdersNew(String token) {
             return response;
         }
     }
-
-
-
-}
     
+    
+    
+}
+
