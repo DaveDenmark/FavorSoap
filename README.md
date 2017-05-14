@@ -14,5 +14,13 @@ IDE: NetBeans
 ## Import the project 
 Clone the repository and import to the IDE.
 
+## Install artifacts
+Go to dependencies, right click and choose "Manually install artifact"
+
+Then navigate to this project and go to src --> main --> java --> libs and cloose the "java-json" file
+click install locally.
+
+Clean and build the project and restart your IDE
+
 ## Serving the API
 Run `server.java`
