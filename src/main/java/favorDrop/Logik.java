@@ -219,7 +219,7 @@ public class Logik {
                 JSONObject jsonObj = new JSONObject(response);
                 String clientID = jsonObj.getString("client id");
                 String a = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/new/"+OID+".json");
-                String b = makeServiceCallDelete("https://favordrop.firebaseio.com/clients/" + clientID + "/orders/new/"+OID+".json");
+                String b = makeServiceCallDelete("https://favordrop.firebaseio.com/clients/" + clientID.substring(41, clientID.length()) + "/orders/new/"+OID+".json");
                 
                 if ("null\n".equals(a) && "null\n".equals(b)) {
                     response = "Ordren blev slettet med succes";
@@ -258,8 +258,8 @@ public class Logik {
                 String uID = jsonObj.getString("client id");
                 String pID = jsonObj.getString("partner id");
                 String a = makeServiceCallDelete("https://favordrop.firebaseio.com/orders/inservice/"+OID+".json");
-                String b = makeServiceCallDelete("https://favordrop.firebaseio.com/clients/" + uID + "/orders/inservice/"+OID+".json");
-                String c = makeServiceCallDelete("https://favordrop.firebaseio.com/partners/" + pID + "/orders/inservice/"+OID+".json");
+                String b = makeServiceCallDelete("https://favordrop.firebaseio.com/clients/" + uID.substring(41,uID.length()) + "/orders/inservice/"+OID+".json");
+                String c = makeServiceCallDelete("https://favordrop.firebaseio.com/partners/" + pID.substring(42,pID.length()) + "/orders/inservice/"+OID+".json");
                 
                 if ("null\n".equals(a) && "null\n".equals(b) && "null\n".equals(c)) {
                     response = "Ordren blev slettet med succes";
